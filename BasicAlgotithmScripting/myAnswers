@@ -1,6 +1,6 @@
-###Reverse a string
+### Reverse a string
 
-
+```javascript
 function reverseString(str) {
   var array = [""];
   
@@ -13,4 +13,4 @@ function reverseString(str) {
 }
 
 reverseString("hello");
-
+```
