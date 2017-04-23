@@ -1,0 +1,16 @@
+###Reverse a string
+
+
+function reverseString(str) {
+  var array = [""];
+  
+  for(var i=0;i<str.length;i++){
+    array.unshift(str[i]); //populate the array from the left to reverse
+  }
+  str = array.join(""); //array to string
+  
+  return str;
+}
+
+reverseString("hello");
+
