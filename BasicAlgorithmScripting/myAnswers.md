@@ -157,6 +157,101 @@ function truncateString(str, num) {
 
 ## Chunky Monkey
 
+#### Method 1 
+
+```javascript
+function chunkArrayInGroups(arr, size) {
+  var resultArray = [[]];
+  
+  var i = 0;
+  var count = 0;
+  while(arr.length>0){
+    
+    if(count==size){
+      count=0;
+      resultArray.push([]);
+      i++;
+    }
+    resultArray[i].push(arr.shift());
+    count++;
+  }
+
+  return resultArray;
+}
+```
+
+#### Method 2 (using .slice)
+
+```javascript
+function chunkArrayInGroups(arr, size) {
+  var resultArray = [];
+  
+  for(var i =0;i<arr.length;i+=size){
+    resultArray.push(arr.slice(i,i+size));
+  }
+
+  return resultArray;
+}
+```
+
+## Slasher Flick
+
+```javascript
+function slasher(arr, howMany) {
+  return arr.slice(howMany,arr.length);
+}
+```
+
+## Mutatoins
+
+```javascript
+function mutation(arr) {
+  var word1 = arr[0].toLowerCase();
+  var word2 = arr[1].toLowerCase();
+  
+  for(var i=0;i<word2.length;i++){
+    if(word1.indexOf(word2[i])<0){
+      return false;
+    }
+  }
+  return true;
+}
+```
+
+## Falsy Bouncer
+
+```javascript
+function bouncer(arr) {
+  
+  return arr.filter(function(value){
+    return (value)
+  });
+}
+```
+
+## Seek and Destroy
+
+```javascript
+function destroyer(arr) {
+  var tempArray = [];
+  var argumentArray = Array.from(arguments);
+  
+  tempArray = arr.filter(function(value){
+        for(var i = 0;i<argumentArray.length;i++){
+          if(value==argumentArray[i]){
+            return false;
+          }
+        }
+        return true;
+     });
+    
+  
+  return tempArray;
+ }
+```
+
+## Where do I belong
+
 ```javascript
 
 ```
