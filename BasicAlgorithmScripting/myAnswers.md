@@ -253,11 +253,35 @@ function destroyer(arr) {
 ## Where do I belong
 
 ```javascript
-
+function getIndexToIns(arr, num) {
+  
+  arr = arr.sort((a,b)=>a-b);
+  for(var i=0;i<arr.length;i++){
+    if(num<=arr[i]){
+      return (i);
+    }
+  }
+  return arr.length;
+}
 ```
 
-## Title Case a Sentence
+## Caesars Cipher
 
 ```javascript
-
+function rot13(str) { // LBH QVQ VG!
+  var tempArray = [];
+  
+  for(var i = 0;i < str.length;i++){
+    var code = str.charCodeAt(i);
+    if(code>=65 && code<=90){
+      code = code - 13;
+      if (code<65){
+        code = 64 - code;
+        code = 90 - code;
+      }
+    }
+    tempArray.push(String.fromCharCode(code));
+  }
+  return tempArray.join("");
+}
 ```
