@@ -1,28 +1,100 @@
 <!DOCTYPE = html>
 <html>
     <head>
-       <script src="/Applications/XAMPP/xamppfiles/htdocs/DiogoMusou/js/jquery-3.0.0.min.js"></script>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script>
             $(document).ready(function(){
-               $("#getquote").on("click",function(){
-                   console.log("click");
-                   $.ajax({
-                       type: "GET",
-                       dataType: jsonp,
-                       url:"http://api.forismatic.com/api/1.0/?method=getQuote&key=457653&format=jsonp&lang=en", 
-                       success:function(result){
-                        console.log("ok");
-                       }
-                   });
-               });
+                $.ajaxSetup({ cache: false });
+                $("#getquote").on("click",function(){
+                    $.getJSON("https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1&callback=", function(a){
+                        var quoteString = a[0].content;
+                        quoteString = quoteString.substring(3,(quoteString.length-5));
+                        console.log(quoteString);
+                        var quoteArray = quoteString.split("");
+                        
+                        var quoteHtml = "";
+                        var authorString = a[0].title;
+                        var authorArray = authorString.split("");
+                        var authorHtml = "";
+                        
+                        for(var i = 0;i<quoteArray.length;i++){
+                            if(quoteArray[i]=="&"){
+                                quoteHtml += "<span>" + quoteArray[i] + quoteArray[i+1] + quoteArray[i+2] + quoteArray[i+3] + quoteArray[i+4] + quoteArray[i+5] + quoteArray[i+6] + "</span>";
+                                i+=6;
+                            } else {
+                                quoteHtml += "<span>" + quoteArray[i] + "</span>";
+                            }
+                            
+                        }
+                        for(var j = 0;j<authorArray.length;j++){
+                            authorHtml += "<span>" + authorArray[j] + "</span>";
+                        }
+                        $("#quote").html(quoteHtml);
+                        $("#author").html("~ "+ authorHtml +" ~");
+                    });
+                });
             });
-            
         </script>
+        <style>
+            @keyframes example {
+                from {background-color: black; color: lightgray;}
+                to {background-color: dimgray; color: white;}
+            }
+            
+            body {
+               
+                color: lightgray;
+                font-family: cursive;
+                padding-top: 10%;
+                background-color: black;
+                animation-name: example;
+                animation-duration: 15s;
+                animation-direction: alternate;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+            }
+            
+            .wrapper {
+                max-width: 800px;
+                border: 0px solid white;
+                margin: auto;
+                
+            }
+            
+            #quote {
+                text-align: center;
+            }
+            
+            #author {
+                padding-right: 10%;
+                text-align: right;
+            }
+            
+            #buttonarea {
+                margin-top: 10%;
+                text-align: center;
+            }
+            
+            #getquote {
+                font-size: 140%;
+                font-weight: 900;
+                width:100px;
+                height:50px;
+            }
+        
+        </style>
         
     </head>
+    
     <body>
-        <h1 id="quote">Quote here</h1>
-        <h3 id="author">Author here</h3>
-        <button id="getquote">NEXT</button>
+        <div class="wrapper">
+            <h1 id="quote">Get inspired by quotes on design.</h1>
+            <h3 id="author">~ Diogo MuSou ~</h3>
+            
+            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello world" target="_blank">Tweet</a>
+            <div id="buttonarea">
+                <button id="getquote">&#8594</button>
+            </div>
+        </div>
     </body>
 </html>
