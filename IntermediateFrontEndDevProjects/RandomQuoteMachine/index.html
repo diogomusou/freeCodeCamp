@@ -1,53 +1,108 @@
 <!DOCTYPE = html>
 <html>
     <head>
-       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script>
             $(document).ready(function(){
                 $.ajaxSetup({ cache: false });
+                
                 $("#getquote").on("click",function(){
                     $.getJSON("https://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=1&callback=", function(a){
                         var quoteString = a[0].content;
+                        //quoteString = "Design is = the method of putting form and content together. Design, just as art, has multiple definitions; there is no single definition. Design can be art. Design can be aesthetics. Design is so simple, that&#8217;s why it is so complicated.";
                         quoteString = quoteString.substring(3,(quoteString.length-5));
                         console.log(quoteString);
+                        
                         var quoteArray = quoteString.split("");
                         
                         var quoteHtml = "";
+                        quoteString = "";
+                        
                         var authorString = a[0].title;
+                        //authorString = "Hick&#8217;s Law";
                         var authorArray = authorString.split("");
                         var authorHtml = "";
+                        authorString = "";
+                        
+                        var stopOutput = false;
                         
                         for(var i = 0;i<quoteArray.length;i++){
                             if(quoteArray[i]=="&"){
+                                quoteString += quoteArray[i] + quoteArray[i+1] + quoteArray[i+2] + quoteArray[i+3] + quoteArray[i+4] + quoteArray[i+5] + quoteArray[i+6];
                                 quoteHtml += "<span>" + quoteArray[i] + quoteArray[i+1] + quoteArray[i+2] + quoteArray[i+3] + quoteArray[i+4] + quoteArray[i+5] + quoteArray[i+6] + "</span>";
                                 i+=6;
+                            } else if(quoteArray[i]=="<"){
+                                //quoteHtml += "<span>" + quoteArray[i] + quoteArray[i+1] + quoteArray[i+2] + quoteArray[i+3] + quoteArray[i+4] + quoteArray[i+5] + quoteArray[i+6] + "</span>";
+                                stopOutput = true;
+                            
+                            } else if (quoteArray[i]==">"){ 
+                                stopOutput = false;
+                                
+                            } else if (stopOutput){
+                            
                             } else {
+                                quoteString += quoteArray[i];
                                 quoteHtml += "<span>" + quoteArray[i] + "</span>";
                             }
                             
                         }
-                        for(var j = 0;j<authorArray.length;j++){
-                            authorHtml += "<span>" + authorArray[j] + "</span>";
+                        for(var i = 0;i<authorArray.length;i++){
+                            if(authorArray[i]=="&"){
+                                authorString += authorArray[i] + authorArray[i+1] + authorArray[i+2] + authorArray[i+3] + authorArray[i+4] + authorArray[i+5] + authorArray[i+6];
+                                authorHtml += "<span>" + authorArray[i] + authorArray[i+1] + authorArray[i+2] + authorArray[i+3] + authorArray[i+4] + authorArray[i+5] + authorArray[i+6] + "</span>";
+                                i+=6;
+                            } else {
+                                authorString += authorArray[i];
+                                authorHtml += "<span>" + authorArray[i] + "</span>";
+                            }
+                            
                         }
                         $("#quote").html(quoteHtml);
-                        $("#author").html("~ "+ authorHtml +" ~");
+                        $("#author").html("<span>~</span> "+ authorHtml +" <span>~</span>");
+                        
+                        quoteString = quoteString.replace(/&#8206;/g,"");
+                        quoteString = quoteString.replace(/&#8216;/g,"'");
+                        quoteString = quoteString.replace(/&#8217;/g,"'");
+                        quoteString = quoteString.replace(/&#8211;/g,"-");
+                        quoteString = quoteString.replace(/&#8230;/g,"...");
+                        quoteString = quoteString.replace(/&#8220;/g,"\"");
+                        quoteString = quoteString.replace(/&#8221;/g,"\"");
+                        quoteString = quoteString.replace(/;/g,":");
+                        
+                        authorString = authorString.replace(/&#8216;/g,"'");
+                        authorString = authorString.replace(/&#8217;/g,"'");
+                        
+                        console.log(quoteString);
+                        $(".twitter-share-button").attr('href','https://twitter.com/intent/tweet?text="' + quoteString + '" (' + authorString + ')');
                     });
                 });
             });
         </script>
         <style>
-            @keyframes example {
+            @keyframes dawn {
                 from {background-color: black; color: lightgray;}
-                to {background-color: dimgray; color: white;}
+                to {background-color: midnightblue; color: white;}
+            }
+            
+            @keyframes twit {
+                0% {transform: rotate(0deg); -webkit-transform: rotate(0deg);}
+                100% {transform: rotate(300deg); -webkit-transform: rotate(20deg);}
+            }
+            
+            @keyframes paint {
+                0% {color: white;}
+                100% {color: #3AAAE1;}
             }
             
             body {
                
                 color: lightgray;
                 font-family: cursive;
-                padding-top: 10%;
+                padding-top: 15%;
                 background-color: black;
-                animation-name: example;
+                animation-name: dawn;
                 animation-duration: 15s;
                 animation-direction: alternate;
                 animation-iteration-count: infinite;
@@ -61,17 +116,31 @@
                 
             }
             
+            .twitter-share-button img {
+                position:relative;
+                right: -10%;
+                animation: twit 0.2s;
+                animation-iteration-count: infinite;
+                animation-direction: alternate;
+                animation-play-state: paused;
+            }
+            
+            .twitter-share-button:hover img{
+                animation-play-state: running;
+            }
+            
             #quote {
                 text-align: center;
             }
             
             #author {
+                padding-top: 5%;
                 padding-right: 10%;
                 text-align: right;
             }
             
             #buttonarea {
-                margin-top: 10%;
+                margin-top: 15%;
                 text-align: center;
             }
             
@@ -80,7 +149,55 @@
                 font-weight: 900;
                 width:100px;
                 height:50px;
+                border: 0;
+                border-radius: 5px;
+                outline: 0;
+                background-color: rgba(58,170,225,0.3);
             }
+            
+            #getquote:hover{
+                /*box-shadow: 2px 2px 1px #3AAAE1;*/
+                background-color: #3AAAE1;
+            }
+            
+            #getquote:active {
+                box-shadow: 1px 1px 20px #3AAAE1;
+            }
+            
+            span{
+               
+                animation: paint 0.01s;
+                animation-fill-mode: forwards;
+                animation-iteration-count: 1;
+                animation-direction: alternate;
+                animation-play-state: paused; 
+            }
+            
+            span:hover{
+                animation-play-state: running;
+            }
+            
+            #footer{
+                text-align: center;
+                font-size: 60%;
+                color: rgba(58,170,225,0.3);
+            }
+            
+            #footer a{
+                text-decoration: none;
+                color:rgba(58,170,225,0.3);
+            }
+            
+            #footer a:visited {
+                color:rgba(58,170,225,0.3);
+            }
+            
+            @media screen and (max-width: 600px){
+                #buttonarea {
+                    margin-top: 50%;
+                }
+            }
+            
         
         </style>
         
@@ -88,13 +205,13 @@
     
     <body>
         <div class="wrapper">
-            <h1 id="quote">Get inspired by quotes on design.</h1>
-            <h3 id="author">~ Diogo MuSou ~</h3>
-            
-            <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Hello world" target="_blank">Tweet</a>
+           <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=&quot;Get inspired by quotes on design.&quot; (Diogo MuSou) https://codepen.io/diogomusou/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/fr/archive/c/c8/20160903181213%21Twitter_Bird.svg" alt="twitter icon" width="50px" style="background-color:"></a>
+            <h1 id="quote"><span>G</span><span>e</span><span>t</span><span> </span><span>i</span><span>n</span><span>s</span><span>p</span><span>i</span><span>r</span><span>e</span><span>d</span><span> </span><span>b</span><span>y</span><span> </span><span>q</span><span>u</span><span>o</span><span>t</span><span>e</span><span>s</span><span> </span><span>o</span><span>n</span><span> </span><span>d</span><span>e</span><span>s</span><span>i</span><span>g</span><span>n</span><span>.</span></h1>
+            <h3 id="author"><span>~</span><span> </span><span>D</span><span>i</span><span>o</span><span>g</span><span>o</span><span> </span><span>M</span><span>u</span><span>S</span><span>o</span><span>u</span><span> </span><span>~</span></h3>
             <div id="buttonarea">
                 <button id="getquote">&#8594</button>
             </div>
+            <p id="footer">by <a href="http://www.diogomusou.com" target="_blank">Diogo MuSou</a></p>
         </div>
     </body>
 </html>
